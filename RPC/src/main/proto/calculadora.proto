@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.ifnmg.rpc";
+option java_outer_classname = "CalculadoraProto";
+
+package calculadora;
+
+service CalculadoraService {
+  rpc Somar (OperacaoRequest) returns (ResultadoResponse);
+  rpc Subtrair (OperacaoRequest) returns (ResultadoResponse);
+  rpc Multiplicar (OperacaoRequest) returns (ResultadoResponse);
+  rpc Dividir (OperacaoRequest) returns (ResultadoResponse);
+}
+
+message OperacaoRequest {
+  double primeiro = 1;
+  double segundo = 2;
+}
+
+message ResultadoResponse {
+  double resultado = 1;
+}
