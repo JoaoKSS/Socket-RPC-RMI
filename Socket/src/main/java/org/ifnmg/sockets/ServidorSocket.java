@@ -11,6 +11,7 @@ import java.net.Socket;
  * Servidor multithread para calculadora distribuída via Sockets TCP.
  * 
  * @author joao-kennedy
+ * @author andref03
  */
 public class ServidorSocket {
     public static final int PORTA_PADRAO = 5000;

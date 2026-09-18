@@ -14,6 +14,7 @@ import java.util.Scanner;
  * Cliente de console para calculadora distribuída via Sockets TCP.
  * 
  * @author joao-kennedy
+ * @author andref03
  */
 public class ClienteSocket {
     public static final String HOST_PADRAO = "localhost";
