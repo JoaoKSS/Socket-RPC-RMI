@@ -3,6 +3,7 @@
  */
 
 package org.ifnmg.sockets;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,23 +11,28 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- *
+ * Cliente de console para calculadora distribuída via Sockets TCP.
+ * 
  * @author joao-kennedy
  */
-
 public class ClienteSocket {
-    public static final String HOST = "localhost";
-    public static final int PORTA = 5000;
+    public static final String HOST_PADRAO = "localhost";
+    public static final int PORTA_PADRAO = 5000;
 
     public static void main(String[] args) {
-        System.out.println("Conectando ao servidor em " + HOST + ":" + PORTA + "...");
+        String host = args.length > 0 ? args[0] : HOST_PADRAO;
+        int porta = args.length > 1 ? Integer.parseInt(args[1]) : PORTA_PADRAO;
 
-        try (Socket socket = new Socket(HOST, PORTA);
+        System.out.println("Conectando ao servidor em " + host + ":" + porta + "...");
+
+        try (Socket socket = new Socket(host, porta);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner scanner = new Scanner(System.in)) {
 
-            System.out.println("Conectado! Digite comandos no formato: SOMA 10 20 (ou 'SAIR')");
+            System.out.println("Conectado com sucesso!");
+            System.out.println("Formato dos comandos: <OPERACAO> <NUM1> <NUM2> (ex: SOMA 10 20)");
+            System.out.println("Operacoes disponiveis: SOMA, SUB, MULT, DIV (ou 'SAIR' para encerrar)");
 
             while (true) {
                 System.out.print("> ");
@@ -39,11 +45,16 @@ public class ClienteSocket {
                 // Envia ao servidor
                 out.println(comando);
 
-                // Lê resposta do servidor
+                // Le resposta do servidor
                 String resposta = in.readLine();
+                if (resposta == null) {
+                    System.out.println("Servidor encerrou a conexao.");
+                    break;
+                }
+
                 System.out.println("Servidor respondeu: " + resposta);
 
-                if (comando.equalsIgnoreCase("SAIR")) {
+                if (comando.trim().equalsIgnoreCase("SAIR")) {
                     break;
                 }
             }
