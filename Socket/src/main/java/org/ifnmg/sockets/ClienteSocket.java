@@ -13,7 +13,7 @@ import java.util.Scanner;
 /**
  * Cliente de console para calculadora distribuída via Sockets TCP.
  * 
- * @author joao-kennedy
+ * @author JoaoKSS
  * @author andref03
  */
 public class ClienteSocket {

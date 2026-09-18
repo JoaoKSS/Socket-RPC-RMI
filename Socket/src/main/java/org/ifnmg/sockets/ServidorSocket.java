@@ -10,7 +10,7 @@ import java.net.Socket;
 /**
  * Servidor multithread para calculadora distribuída via Sockets TCP.
  * 
- * @author joao-kennedy
+ * @author JoaoKSS
  * @author andref03
  */
 public class ServidorSocket {

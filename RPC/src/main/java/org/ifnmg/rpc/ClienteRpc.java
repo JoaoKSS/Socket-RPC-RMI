@@ -1,14 +1,14 @@
 package org.ifnmg.rpc;
 
-import java.util.Scanner;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
+import java.util.Scanner;
 
 /**
  * Cliente de console para calculadora distribuída via gRPC.
  * 
- * @author joao-kennedy
+ * @author JoaoKSS
  * @author andref03
  */
 

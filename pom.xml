@@ -12,5 +12,6 @@
     <modules>
         <module>Socket</module>
         <module>RPC</module>
+        <module>RMI</module>
     </modules>
 </project>

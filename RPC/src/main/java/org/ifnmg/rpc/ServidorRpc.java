@@ -6,7 +6,7 @@ import io.grpc.ServerBuilder;
 /**
  * Servidor gRPC para calculadora distribuída.
  * 
- * @author joao-kennedy
+ * @author JoaoKSS
  * @author andref03
  */
 
