@@ -49,6 +49,7 @@ nb-configuration.xml
 .LSOverride
 ._*
 
+
 # Windows
 Thumbs.db
 Thumbs.db:encryptable
