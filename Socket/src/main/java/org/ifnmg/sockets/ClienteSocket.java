@@ -32,8 +32,7 @@ public class ClienteSocket {
              Scanner scanner = new Scanner(System.in)) {
 
             System.out.println("Conectado com sucesso!");
-            System.out.println("Formato dos comandos: <OPERACAO> <NUM1> <NUM2> (ex: SOMA 10 20)");
-            System.out.println("Operacoes disponiveis: SOMA, SUB, MULT, DIV (ou 'SAIR' para encerrar)");
+            System.out.println("Use: SOMA|SUB|MULT|DIV <num1> <num2> ou SAIR");
 
             while (true) {
                 System.out.print("> ");
@@ -41,6 +40,12 @@ public class ClienteSocket {
 
                 if (comando.trim().isEmpty()) {
                     continue;
+                }
+
+                if (comando.trim().equalsIgnoreCase("SAIR")) {
+                    out.println(comando);
+                    System.out.println("Encerrando cliente Socket.");
+                    break;
                 }
 
                 // Envia ao servidor
@@ -53,10 +58,10 @@ public class ClienteSocket {
                     break;
                 }
 
-                System.out.println("Servidor respondeu: " + resposta);
-
-                if (comando.trim().equalsIgnoreCase("SAIR")) {
-                    break;
+                if (resposta.startsWith("RESULTADO: ")) {
+                    System.out.println("Servidor respondeu: " + resposta.substring(11));
+                } else {
+                    System.out.println(resposta);
                 }
             }
         } catch (Exception e) {
