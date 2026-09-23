@@ -2,25 +2,29 @@
 
 **Instituição:** Instituto Federal do Norte de Minas Gerais (IFNMG)  
 **Disciplina:** Sistemas Distribuídos  
-**Autores:** JoaoKSS e andref03  
-**Repositório:** [Socket-RPC-RMI](https://github.com/andref03/Socket-RPC-RMI)  
+**Autores:** André Felipe, João Kennedy
+**Repositório:** [Socket-RPC-RMI](https://github.com/JoaoKSS/Socket-RPC-RMI)
 
 ---
 
 ## 1. Introdução e Aplicação Escolhida
 
 ### 1.1. Contextualização
+
 A evolução dos sistemas distribuídos trouxe diferentes paradigmas de comunicação entre processos remotos, variando desde o controle de baixo nível sobre fluxos de bytes até abstrações de alto nível que ocultam a complexidade de rede e fazem invocações remotas se assemelharem a chamadas locais de métodos.
 
 O objetivo deste trabalho prático é implementar e comparar três abordagens fundamentais de computação distribuída:
+
 1. **Sockets de Rede (TCP)**
 2. **RPC (Remote Procedure Call)** utilizando **gRPC** com Protocol Buffers
 3. **RMI (Remote Method Invocation)** com Java RMI nativo
 
 ### 1.2. Aplicação Escolhida: Calculadora Distribuída
+
 Para permitir uma comparação estritamente técnica entre os mecanismos de comunicação, foi escolhida uma **Calculadora Distribuída** como aplicação comum entre as três versões.
 
 A calculadora disponibiliza quatro operações matemáticas básicas:
+
 - **SOMA** ($a + b$)
 - **SUB** ($a - b$)
 - **MULT** ($a \times b$)
@@ -41,6 +45,7 @@ flowchart LR
 ### 2.1. Abordagem 1: Sockets TCP
 
 #### Arquitetura
+
 A versão em Sockets opera na camada de transporte da pilha TCP/IP. Ela utiliza sockets de fluxo orientados a conexão (`ServerSocket` e `Socket`), garantindo entrega confiável e ordenada de pacotes de dados através do protocolo TCP.
 
 ```mermaid
@@ -67,6 +72,7 @@ sequenceDiagram
 ```
 
 #### Detalhes de Implementação
+
 - **Protocolo de Aplicação Textual**: Como os Sockets não oferecem empacotamento semântico automático, foi desenvolvido um protocolo baseado em linhas de texto delimitadas por quebra de linha (`\n`):
   - Formato de requisição: `<OPERACAO> <NUM1> <NUM2>` (ex: `SOMA 10 20`)
   - Formato de resposta: `RESULTADO: <VALOR>` ou `ERRO: <MENSAGEM>`
@@ -78,6 +84,7 @@ sequenceDiagram
 ### 2.2. Abordagem 2: gRPC (RPC - Remote Procedure Call)
 
 #### Arquitetura
+
 O gRPC é um framework RPC de alta performance moderno, de código aberto mantido pela Cloud Native Computing Foundation (CNCF). A comunicação baseia-se na definição formal de um contrato estrito de interface (IDL - Interface Definition Language) utilizando **Protocol Buffers** (proto3) e transportada sobre **HTTP/2**.
 
 ```mermaid
@@ -106,7 +113,9 @@ sequenceDiagram
 ```
 
 #### Detalhes de Implementação
+
 - **Contrato IDL (`calculadora.proto`)**: O serviço foi definido no arquivo de proto:
+
   ```protobuf
   syntax = "proto3";
   option java_multiple_files = true;
@@ -128,6 +137,7 @@ sequenceDiagram
     double resultado = 1;
   }
   ```
+
 - **Geração de Código Automática**: O plugin `protobuf-maven-plugin` compila o arquivo `.proto` gerando as classes de transporte fortemente tipadas (`OperacaoRequest`, `ResultadoResponse`) e a classe base do serviço (`CalculadoraServiceImplBase`).
 - **Servidor**: O `ServidorRpc` utiliza a biblioteca `grpc-netty-shaded` para subir um servidor gRPC na porta `8080` com `ServerBuilder.forPort(porta).addService(new CalculadoraRpc()).build().start()`.
 - **Cliente**: Conecta-se via `ManagedChannelBuilder.forAddress(host, porta).usePlaintext().build()` e invoca os métodos de forma síncrona através de um stub bloqueante gerado (`CalculadoraServiceBlockingStub`).
@@ -137,7 +147,8 @@ sequenceDiagram
 ### 2.3. Abordagem 3: Java RMI (Remote Method Invocation)
 
 #### Arquitetura
-O Java RMI estende o modelo de objetos nativo do Java para ambientes distribuídos. Ele permite que uma aplicação cliente invoque diretamente métodos de um objeto que reside em outra Máquina Virtual Java (JVM), abstraindo a rede através de um par *Stub* (no cliente) e *Skeleton/Dispatcher* (no servidor).
+
+O Java RMI estende o modelo de objetos nativo do Java para ambientes distribuídos. Ele permite que uma aplicação cliente invoque diretamente métodos de um objeto que reside em outra Máquina Virtual Java (JVM), abstraindo a rede através de um par _Stub_ (no cliente) e _Skeleton/Dispatcher_ (no servidor).
 
 ```mermaid
 sequenceDiagram
@@ -165,6 +176,7 @@ sequenceDiagram
 ```
 
 #### Detalhes de Implementação
+
 - **Interface Remota (`CalculadoraRmi`)**: Define o contrato estendendo a interface marcadora `java.rmi.Remote`. Cada método remoto declara obrigatoriamente a exceção `RemoteException`:
   ```java
   public interface CalculadoraRmi extends Remote {
@@ -197,58 +209,61 @@ graph LR
 
 ### 3.2. Diferenças de Implementação e Protocolo
 
-| Critério | Sockets TCP | gRPC (RPC) | Java RMI |
-| :--- | :--- | :--- | :--- |
-| **Protocolo de Transporte** | TCP puro (camada de transporte) | HTTP/2 sobre TCP | JRMP (Java Remote Method Protocol) sobre TCP |
-| **Formato dos Dados** | Texto plano delimitado (`\n`) | Binário Protocol Buffers (Proto3) | Binário Java Serialization |
-| **Estrutura de Contrato** | Nenhuma (acordo implícito de strings) | Arquivo de IDL (`.proto`) | Interface Java (`extends Remote`) |
-| **Gerenciamento de Threads** | Manual (`Thread` dedicada por conexão) | Automático (pool gerenciado pelo Netty) | Automático (pool gerenciado pelo runtime do RMI) |
-| **Tipagem dos Parâmetros** | Fraca (requer `Double.parseDouble`) | Forte (definida estritamente no schema) | Forte (verificada pelo compilador Java) |
-| **Interoperabilidade** | Universal (qualquer linguagem) | Universal (suporte nativo multi-linguagem) | Restrita (apenas ecossistema Java / JVM) |
-| **Dependências Externas** | Nenhuma (Java SDK padrão) | Bibliotecas gRPC, Protobuf e Netty | Nenhuma (Java SDK padrão) |
-| **Tamanho da Mensagem** | Pequeno (texto cru) | Mínimo (binário comprimido com tags) | Médio a Alto (overhead de metadados da serialização Java) |
+| Critério                     | Sockets TCP                            | gRPC (RPC)                                 | Java RMI                                                  |
+| :--------------------------- | :------------------------------------- | :----------------------------------------- | :-------------------------------------------------------- |
+| **Protocolo de Transporte**  | TCP puro (camada de transporte)        | HTTP/2 sobre TCP                           | JRMP (Java Remote Method Protocol) sobre TCP              |
+| **Formato dos Dados**        | Texto plano delimitado (`\n`)          | Binário Protocol Buffers (Proto3)          | Binário Java Serialization                                |
+| **Estrutura de Contrato**    | Nenhuma (acordo implícito de strings)  | Arquivo de IDL (`.proto`)                  | Interface Java (`extends Remote`)                         |
+| **Gerenciamento de Threads** | Manual (`Thread` dedicada por conexão) | Automático (pool gerenciado pelo Netty)    | Automático (pool gerenciado pelo runtime do RMI)          |
+| **Tipagem dos Parâmetros**   | Fraca (requer `Double.parseDouble`)    | Forte (definida estritamente no schema)    | Forte (verificada pelo compilador Java)                   |
+| **Interoperabilidade**       | Universal (qualquer linguagem)         | Universal (suporte nativo multi-linguagem) | Restrita (apenas ecossistema Java / JVM)                  |
+| **Dependências Externas**    | Nenhuma (Java SDK padrão)              | Bibliotecas gRPC, Protobuf e Netty         | Nenhuma (Java SDK padrão)                                 |
+| **Tamanho da Mensagem**      | Pequeno (texto cru)                    | Mínimo (binário comprimido com tags)       | Médio a Alto (overhead de metadados da serialização Java) |
 
 ---
 
 ### 3.3. Facilidade de Uso e Complexidade
 
 - **Sockets**:
-  - *Facilidade de início*: Alta para testes rápidos e pequenos.
-  - *Complexidade de manutenção*: Muito alta à medida que o sistema cresce. Adicionar novas operações exige alterar o parser de string em ambos os lados e tratar manualmente todos os casos de borda.
+  - _Facilidade de início_: Alta para testes rápidos e pequenos.
+  - _Complexidade de manutenção_: Muito alta à medida que o sistema cresce. Adicionar novas operações exige alterar o parser de string em ambos os lados e tratar manualmente todos os casos de borda.
 - **gRPC**:
-  - *Facilidade de início*: Média/Baixa, pois exige configurar ferramentas de build (Maven com `protobuf-maven-plugin`), compiladores nativos (`protoc`) e aprender a sintaxe do Protocol Buffers.
-  - *Complexidade de manutenção*: Baixa. A adição de novas operações é simples: basta declarar no `.proto`, rodar a compilação e implementar os métodos tipados. O compilador acusa em tempo de compilação qualquer incompatibilidade.
+  - _Facilidade de início_: Média/Baixa, pois exige configurar ferramentas de build (Maven com `protobuf-maven-plugin`), compiladores nativos (`protoc`) e aprender a sintaxe do Protocol Buffers.
+  - _Complexidade de manutenção_: Baixa. A adição de novas operações é simples: basta declarar no `.proto`, rodar a compilação e implementar os métodos tipados. O compilador acusa em tempo de compilação qualquer incompatibilidade.
 - **Java RMI**:
-  - *Facilidade de início*: Alta para desenvolvedores Java, já que vem integrado ao JDK sem necessidade de dependências extras.
-  - *Complexidade de manutenção*: Média. Alterações de interfaces exigem recompilação e compatibilidade de `serialVersionUID`.
+  - _Facilidade de início_: Alta para desenvolvedores Java, já que vem integrado ao JDK sem necessidade de dependências extras.
+  - _Complexidade de manutenção_: Média. Alterações de interfaces exigem recompilação e compatibilidade de `serialVersionUID`.
 
 ---
 
 ## 4. Vantagens e Desvantagens Percebidas
 
 ### 4.1. Sockets TCP
+
 - **Vantagens**:
   - Independência total de frameworks ou bibliotecas externas.
   - Controle granular sobre buffers, timeouts, portas e ciclo de vida das conexões.
   - Permite criar protocolos proprietários ultraleves.
 - **Desvantagens**:
-  - Grande quantidade de código repetitivo (*boilerplate*).
+  - Grande quantidade de código repetitivo (_boilerplate_).
   - Propensão a erros de parsing e formatação de texto em tempo de execução.
   - Não oferece abstração de procedimentos ou tipos.
   - Risco de bloqueio do servidor caso o controle de threads não seja projetado adequadamente.
 
 ### 4.2. gRPC (RPC)
+
 - **Vantagens**:
   - Alto desempenho e baixo consumo de largura de banda graças à serialização binária do Protocol Buffers e multiplexação do HTTP/2.
   - Interoperabilidade total entre diferentes linguagens (servidor em Java, cliente em Python, Go, Node.js ou C# sem alterações).
   - Geração de código automática (stubs) robusta e fortemente tipada.
-  - Suporte nativo a chamadas síncronas, assíncronas e *streaming* bidirecional.
+  - Suporte nativo a chamadas síncronas, assíncronas e _streaming_ bidirecional.
 - **Desvantagens**:
   - Curva de aprendizado inicial mais acentuada.
   - Dependência do ciclo de compilação de arquivos `.proto`.
   - Depuração em rede mais desafiadora (payload binário não é legível como texto simples sem ferramentas adequadas).
 
 ### 4.3. Java RMI
+
 - **Vantagens**:
   - Integração natural e elegante com o paradigma de Orientação a Objetos do Java.
   - Facilidade de chamada: o código cliente manipula o objeto remoto exatamente como se fosse local.
@@ -292,7 +307,9 @@ graph LR
 Graças à padronização implementada através de perfis nos arquivos `pom.xml`, todas as três aplicações podem ser executadas com os mesmos comandos.
 
 ### Compilação Geral
+
 Na raiz do repositório:
+
 ```bash
 mvn compile
 ```
@@ -300,30 +317,34 @@ mvn compile
 ### Execução de Cada Versão
 
 #### Opção A: Executando a partir da raiz do repositório
+
 Abra dois terminais:
 
-* **Sockets:**
-  - *Terminal 1 (Servidor):* `mvn exec:java -pl Socket -Pservidor`
-  - *Terminal 2 (Cliente):* `mvn exec:java -pl Socket -Pcliente`
+- **Sockets:**
+  - _Terminal 1 (Servidor):_ `mvn exec:java -pl Socket -Pservidor`
+  - _Terminal 2 (Cliente):_ `mvn exec:java -pl Socket -Pcliente`
 
-* **gRPC (RPC):**
-  - *Terminal 1 (Servidor):* `mvn exec:java -pl RPC -Pservidor`
-  - *Terminal 2 (Cliente):* `mvn exec:java -pl RPC -Pcliente`
+- **gRPC (RPC):**
+  - _Terminal 1 (Servidor):_ `mvn exec:java -pl RPC -Pservidor`
+  - _Terminal 2 (Cliente):_ `mvn exec:java -pl RPC -Pcliente`
 
-* **Java RMI:**
-  - *Terminal 1 (Servidor):* `mvn exec:java -pl RMI -Pservidor`
-  - *Terminal 2 (Cliente):* `mvn exec:java -pl RMI -Pcliente`
+- **Java RMI:**
+  - _Terminal 1 (Servidor):_ `mvn exec:java -pl RMI -Pservidor`
+  - _Terminal 2 (Cliente):_ `mvn exec:java -pl RMI -Pcliente`
 
 #### Opção B: Executando dentro da pasta de cada tecnologia
+
 Navegue até a pasta desejada (`cd Socket`, `cd RPC` ou `cd RMI`):
-- *Terminal 1 (Servidor):* `mvn exec:java -Pservidor`
-- *Terminal 2 (Cliente):* `mvn exec:java -Pcliente`
+
+- _Terminal 1 (Servidor):_ `mvn exec:java -Pservidor`
+- _Terminal 2 (Cliente):_ `mvn exec:java -Pcliente`
 
 ---
 
 ## 8. Conclusão
 
 A atividade prática proporcionou uma visão completa sobre o espectro de abstrações em sistemas distribuídos:
+
 - Os **Sockets** permitiram compreender a mecânica elementar de comunicação em redes, evidenciando o esforço necessário para criar e manter protocolos de aplicação manualmente.
 - O **gRPC** destacou-se como a solução mais robusta, eficiente e adequada ao mercado contemporâneo, combinando alto desempenho, contratos rigorosos e interoperabilidade de linguagens.
 - O **Java RMI** ilustrou com clareza o conceito de transparência de localização na orientação a objetos, embora limitado pela dependência exclusiva da plataforma Java.
