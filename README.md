@@ -1,5 +1,12 @@
 # Relatório Comparativo: Comunicação Distribuída com Sockets TCP, gRPC (RPC) e Java RMI
 
+![Java](https://img.shields.io/badge/Java_17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![Sockets TCP](https://img.shields.io/badge/Sockets_TCP-005571?style=for-the-badge)
+![gRPC](https://img.shields.io/badge/gRPC-244C5A?style=for-the-badge&logo=grpc&logoColor=white)
+![Protocol Buffers](https://img.shields.io/badge/Protocol_Buffers-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Java RMI](https://img.shields.io/badge/Java_RMI-5382A1?style=for-the-badge&logo=openjdk&logoColor=white)
+
 **Instituição:** Instituto Federal do Norte de Minas Gerais (IFNMG)  
 **Disciplina:** Sistemas Distribuídos  
 **Autores:** André Felipe, João Kennedy
