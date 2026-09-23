@@ -79,4 +79,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>servidor</id>
+            <properties>
+                <exec.mainClass>org.ifnmg.rpc.ServidorRpc</exec.mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>cliente</id>
+            <properties>
+                <exec.mainClass>org.ifnmg.rpc.ClienteRpc</exec.mainClass>
+            </properties>
+        </profile>
+    </profiles>
 </project>

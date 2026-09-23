@@ -27,5 +27,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>servidor</id>
+            <properties>
+                <exec.mainClass>org.ifnmg.rmi.ServidorRmi</exec.mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>cliente</id>
+            <properties>
+                <exec.mainClass>org.ifnmg.rmi.ClienteRmi</exec.mainClass>
+            </properties>
+        </profile>
+    </profiles>
 </project>
 
