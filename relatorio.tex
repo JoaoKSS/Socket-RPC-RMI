@@ -1,0 +1,540 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- Pacotes Fundamentais ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+
+\usepackage[
+    a4paper,
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm
+]{geometry}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{indentfirst} % Indenta o primeiro parágrafo de cada seção
+\usepackage{titlesec}    % Formatação de títulos
+\usepackage{booktabs}    % Tabelas
+\usepackage{tabularx}    % Tabelas com largura ajustada
+\usepackage{listings}    % Blocos de código-fonte
+\usepackage{xcolor}      % Cores para código e detalhes visuais
+\usepackage{colortbl}    % Preenchimento e cores em tabelas
+\usepackage{fancyhdr}    % Numeração de páginas no cabeçalho superior direito
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+% --- Configuração de Cores para Código ---
+\definecolor{codegreen}{rgb}{0.15,0.55,0.15}
+\definecolor{codegray}{rgb}{0.45,0.45,0.45}
+\definecolor{codepurple}{rgb}{0.50,0.10,0.60}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.98}
+\definecolor{linegray}{rgb}{0.85,0.85,0.85}
+
+\lstdefinestyle{estilocodigo}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{blue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=t,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=7pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{linegray}
+}
+\lstset{style=estilocodigo}
+
+% --- Formatação Acadêmica ABNT ---
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+% Espaçamento de figuras e tabelas
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+
+% Espaçamento das legendas
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{4pt}
+\captionsetup{font=small,justification=centering}
+
+% --- Formatação de Títulos ---
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}
+  {\thesection}{1em}{\MakeUppercase}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape}
+  {\thesubsubsection}{1em}{}
+
+% Configuração de Links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue!70!black
+}
+
+% Cabeçalhos e Rodapés
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\rhead{\small\thepage}
+
+\begin{document}
+
+% =========================================================================
+% ELEMENTOS PRÉ-TEXTUAIS
+% =========================================================================
+
+% --- Capa (IFNMG) ---
+\begin{titlepage}
+    \begin{center}
+        \vspace*{-1.2cm}
+        \noindent\hspace*{-2cm}%
+        \begin{minipage}[c]{3.2cm}
+            \centering
+            \begin{tikzpicture}[scale=0.48]
+                % Linha 4 (topo): circulo + 2 quadrados
+                \draw[fill=red!80!black, draw=none] (0,3) circle (0.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (0.55,2.55) rectangle (1.45,3.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (1.55,2.55) rectangle (2.45,3.45);
+
+                % Linha 3: 2 quadrados
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (-0.45,1.55) rectangle (0.45,2.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (0.55,1.55) rectangle (1.45,2.45);
+
+                % Linha 2: 3 quadrados
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (-0.45,0.55) rectangle (0.45,1.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (0.55,0.55) rectangle (1.45,1.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (1.55,0.55) rectangle (2.45,1.45);
+
+                % Linha 1: 2 quadrados
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (-0.45,-0.45) rectangle (0.45,0.45);
+                \draw[fill=green!60!black, draw=none, rounded corners=1.2pt] (0.55,-0.45) rectangle (1.45,0.45);
+            \end{tikzpicture}
+        \end{minipage}%
+        \begin{minipage}[c]{\dimexpr\textwidth-1.2cm\relax}
+            \centering
+            \fontsize{9}{11}\selectfont
+            MINISTÉRIO DA EDUCAÇÃO \\
+            SECRETARIA DE EDUCAÇÃO PROFISSIONAL E TECNOLÓGICA \\
+            INSTITUTO FEDERAL DO NORTE DE MINAS GERAIS -- IFNMG \\
+            \small Criado pela Lei nº 11.892, de 29/12/2008 \\
+            Campus Montes Claros
+        \end{minipage}
+
+        \vfill
+
+        \normalsize
+        ANDRÉ FELIPE OLIVEIRA LOPES \\
+        JOÃO KENNEDY SOUZA SOARES \\
+
+        \vfill
+
+        \textbf{\large RELATÓRIO TÉCNICO: SISTEMAS DISTRIBUÍDOS}\\[0.35cm]
+        \textbf{\normalsize ESTUDO COMPARATIVO ENTRE SOCKETS TCP, RPC (gRPC) E JAVA RMI} \\
+
+        \vfill
+
+        \hfill
+        \begin{minipage}{0.52\textwidth}
+            \setstretch{1.0}
+            \small
+            Relatório técnico apresentado como parte das exigências de avaliação da disciplina de Sistemas Distribuídos do Curso de Bacharelado em Ciência da Computação do Instituto Federal do Norte de Minas Gerais -- IFNMG, Campus Montes Claros. \\
+            
+            \vspace{0.3cm}
+            \textbf{Atividade:} Atividade 3 -- Sockets, RPC e RMI \\
+            \textbf{Docente:} Prof. Me. Danilo Teixeira Silva
+        \end{minipage}
+
+        \vfill
+
+        \normalsize
+        MONTES CLAROS - MG \\
+        2026
+    \end{center}
+\end{titlepage}
+
+% Início da contagemdas páginas
+\pagestyle{fancy}
+
+% =========================================================================
+% 1. INTRODUÇÃO
+% =========================================================================
+\section{Introdução}
+Este trabalho apresenta a implementação e a análise comparativa de três paradigmas fundamentais de comunicação em sistemas distribuídos: Sockets TCP, Remote Procedure Call (gRPC) e Remote Method Invocation (Java RMI). Com o intuito de confrontar empiricamente aspectos como nível de abstração, complexidade de implementação, segurança de tipos e sobrecarga de protocolo, foi desenvolvida uma mesma aplicação para os três cenários: uma calculadora distribuída interativa capaz de realizar as quatro operações aritméticas básicas (soma, subtração, multiplicação e divisão com tratamento de divisão por zero). A padronização da regra de negócio permitiu isolar as características de cada middleware, evidenciando as diferenças reais entre o controle em baixo nível e a transparência de chamadas remotas.
+
+% =========================================================================
+% 2. DESCRIÇÃO DA APLICAÇÃO: CALCULADORA DISTRIBUÍDA
+% =========================================================================
+\section{Descrição da Aplicação: Calculadora Distribuída}
+
+Como base de comparação uniforme entre os três paradigmas, implementou-se uma \textbf{Calculadora Distribuída} sob o modelo cliente-servidor interativo. A aplicação disponibiliza as quatro operações aritméticas básicas sobre valores \texttt{double}: soma ($a + b$), subtração ($a - b$), multiplicação ($a \times b$) e divisão ($a \div b$), incluindo validação estrita contra divisão por zero.
+
+O cliente opera via console em laço contínuo através da sintaxe \texttt{<OPERACAO> <NUM1> <NUM2>} (ex.: \texttt{SOMA 10 20}), permanecendo ativo até o comando \texttt{SAIR}. O servidor computa a operação e retorna o valor numérico calculado ou uma mensagem de erro correspondente. A Figura~\ref{fig:fluxo_geral} ilustra o fluxo de comunicação.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=5.6cm,
+        box/.style={
+            rectangle, 
+            draw=black, 
+            thick, 
+            fill=blue!5, 
+            rounded corners=3pt, 
+            minimum height=1.6cm, 
+            minimum width=3.8cm, 
+            align=center
+        },
+        arrow/.style={-{Stealth[length=2.5mm]}, thick}
+    ]
+        \node[box] (cli) {\textbf{Cliente Distribuído}\\(Console Interativo)};
+        \node[box, right=of cli] (srv) {\textbf{Servidor de Cálculo}\\(Execução Matemática)};
+
+        \draw[arrow] ([yshift=0.3cm]cli.east) -- node[midway, above=2pt, font=\footnotesize] {Requisição: Operação e Parâmetros} ([yshift=0.3cm]srv.west);
+        \draw[arrow] ([yshift=-0.3cm]srv.west) -- node[midway, below=2pt, font=\footnotesize] {Resposta: Valor Calculado ou Erro} ([yshift=-0.3cm]cli.east);
+    \end{tikzpicture}
+    \caption{Fluxo de comunicação cliente-servidor da Calculadora Distribuída.}
+    \label{fig:fluxo_geral}
+\end{figure}
+
+% =========================================================================
+% 3. ARQUITETURA E IMPLEMENTAÇÃO DAS ABORDAGENS
+% =========================================================================
+\section{Arquitetura e Implementação das Abordagens}
+
+A seguir, apresentam-se as características arquiteturais, o funcionamento e os diagramas de sequência de cada tecnologia.
+
+% -------------------------------------------------------------------------
+\subsection{Sockets TCP}
+
+A implementação opera na camada de transporte via fluxos confiáveis orientados a conexão (\texttt{ServerSocket} e \texttt{Socket}) na porta \texttt{5000}. O servidor adota o padrão \textit{thread-per-connection} através da classe \texttt{AtendenteCliente}, atendendo clientes concorrentes de forma isolada sem bloquear o laço de escuta.
+
+Por se tratar de um canal de fluxo de bytes não estruturado, definiu-se um protocolo textual delimitado por quebra de linha (\texttt{\textbackslash n}). A validação e o \textit{parsing} dos comandos ocorrem manualmente via \texttt{String.split()} e \texttt{Double.parseDouble()}, retornando o resultado ou mensagens de falha (\texttt{ERRO: ...}) sem derrubar a conexão. A Figura~\ref{fig:seq_socket} detalha esse fluxo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{diagrama-sequencia-socket.png}
+    \caption{Diagrama de sequência da interação cliente-servidor via Sockets TCP.}
+    \label{fig:seq_socket}
+\end{figure}
+
+% -------------------------------------------------------------------------
+\subsection{RPC com gRPC}
+
+A versão RPC utiliza o arcabouço gRPC sobre HTTP/2 com serialização binária compacta em Protocol Buffers (proto3). O contrato das operações e mensagens foi formalizado no arquivo \texttt{calculadora.proto} (Listagem~\ref{lst:proto}).
+
+\begin{lstlisting}[language=Java, caption={Contrato de serviço definido em Protocol Buffers (calculadora.proto).}, label={lst:proto}]
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "org.ifnmg.rpc";
+
+service CalculadoraService {
+  rpc Somar (OperacaoRequest) returns (ResultadoResponse);
+  rpc Subtrair (OperacaoRequest) returns (ResultadoResponse);
+  rpc Multiplicar (OperacaoRequest) returns (ResultadoResponse);
+  rpc Dividir (OperacaoRequest) returns (ResultadoResponse);
+}
+
+message OperacaoRequest {
+  double primeiro = 1;
+  double segundo = 2;
+}
+
+message ResultadoResponse {
+  double resultado = 1;
+}
+\end{lstlisting}
+
+O compilador \texttt{protobuf-maven-plugin} gera as classes de dados tipadas e o serviço base (\texttt{CalculadoraServiceImplBase}). O servidor (\texttt{ServidorRpc}) executa sobre o Netty na porta \texttt{8080}, enquanto o cliente (\texttt{ClienteRpc}) utiliza um canal gerenciado (\texttt{ManagedChannel}) com \textit{stub} síncrono bloqueante (\texttt{BlockingStub}), simplificando a invocação como ilustrado na Figura~\ref{fig:seq_grpc}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{diagrama-sequencia-rpc.png}
+    \caption{Diagrama de sequência da invocação remota com gRPC e Protocol Buffers.}
+    \label{fig:seq_grpc}
+\end{figure}
+
+% -------------------------------------------------------------------------
+\subsection{Java RMI}
+
+O Java RMI provê computação distribuída baseada em objetos nativos da JVM sobre o protocolo JRMP. A especificação utiliza a interface remota \texttt{CalculadoraRmi} (que estende \texttt{Remote} e declara \texttt{RemoteException}) e a classe concreta \texttt{CalculadoraRmiImpl} (que herda de \texttt{UnicastRemoteObject}).
+
+O nó servidor publica a instância remota no \textbf{RMI Registry} (porta 1099) sob o identificador \texttt{"CalculadoraService"} através do método \texttt{rebind()}. O cliente obtém a referência remota via \texttt{lookup()} e invoca os métodos diretamente sobre o \textit{stub} local com transparência sintática, conforme a Figura~\ref{fig:seq_rmi}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{diagrama-sequencia-rmi.png}
+    \caption{Diagrama de sequência da resolução e chamada remota via Java RMI.}
+    \label{fig:seq_rmi}
+\end{figure}
+
+% =========================================================================
+% 4. ANÁLISE COMPARATIVA DETALHADA
+% =========================================================================
+\section{Análise Comparativa}
+
+Nesta seção, estabelece-se um comparativo técnico e analítico entre as três soluções com respeito a abstração, arquitetura de rede, complexidade e desempenho.
+
+% -------------------------------------------------------------------------
+\subsection{Nível de Abstração Oferecido}
+
+As três soluções situam-se em patamares substancialmente distintos ao longo da escala de abstração, conforme sintetizado na Figura~\ref{fig:abstracao}:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        scale=0.92, every node/.style={transform shape},
+        levelbox/.style={rectangle, draw=black!80, thick, rounded corners=3pt, minimum width=4.3cm, minimum height=2.3cm, align=center, font=\small}
+    ]
+        \node[levelbox, fill=red!8] (sock) at (0, 0) {
+            \textbf{Sockets TCP}\\[1mm]
+            \textit{Baixo Nível}\\[1.5mm]
+            \scriptsize $\bullet$ Fluxo contínuo de bytes\\
+            \scriptsize $\bullet$ Protocolo textual manual\\
+            \scriptsize $\bullet$ Gestão manual de threads
+        };
+
+        \node[levelbox, fill=blue!8] (rpc) at (5.0, 0) {
+            \textbf{gRPC (RPC)}\\[1mm]
+            \textit{Médio-Alto Nível}\\[1.5mm]
+            \scriptsize $\bullet$ Chamada de procedimentos\\
+            \scriptsize $\bullet$ Contrato formal em IDL\\
+            \scriptsize $\bullet$ Serialização binária
+        };
+
+        \node[levelbox, fill=green!8] (rmi) at (10.0, 0) {
+            \textbf{Java RMI}\\[1mm]
+            \textit{Alto Nível}\\[1.5mm]
+            \scriptsize $\bullet$ Orientação a objetos pura\\
+            \scriptsize $\bullet$ Transparência sintática\\
+            \scriptsize $\bullet$ Tipagem nativa na JVM
+        };
+
+        % Seta horizontal de evolução no rodapé
+        \draw[-{Stealth[length=3.5mm]}, thick, draw=blue!80!black] 
+            (-2.15, -1.6) -- (12.15, -1.6) 
+            node[midway, below=3pt, font=\small\bfseries] {Evolução do Nível de Abstração};
+    \end{tikzpicture}
+    \caption{Escala de abstração entre os paradigmas de comunicação avaliados.}
+    \label{fig:abstracao}
+\end{figure}
+
+No modelo de \textbf{Sockets}, o desenvolvedor é compelido a lidar com toda a infraestrutura física de rede: buffers de leitura, controle de fim de linha, conversão de tipos de dados de primitivos para strings e controle do ciclo de vida das conexões. 
+
+No \textbf{gRPC}, a complexidade de transporte é totalmente encapsulada, fornecendo a semântica de chamada de procedimento remoto. Contudo, há uma distinção arquitetural sadia entre objetos locais e mensagens de requisição/resposta (\textit{Data Transfer Objects} com \texttt{OperacaoRequest} e \texttt{ResultadoResponse}), prevenindo a ilusão de que a rede possui custo nulo.
+
+Por fim, o \textbf{Java RMI} atinge o topo da abstração sintática: o objeto remoto é manuseado indistinguivelmente de um objeto local, bastando que métodos sejam invocados sobre a interface. No entanto, essa total transparência de localização pode ocultar latências de rede e potenciais falhas parciais que não ocorrem na memória local.
+
+% -------------------------------------------------------------------------
+\subsection{Diferenças de Implementação e Protocolos de Rede}
+
+As divergências estruturais entre as tecnologias refletem diretamente no consumo de rede e no acoplamento técnico. Enquanto os Sockets operam sobre TCP puro com mensagens em texto plano delimitadas por \texttt{\textbackslash n} e exigem controle manual de \textit{threads}, o gRPC emprega conexões persistentes multiplexadas sobre HTTP/2 com codificação binária compacta (Protocol Buffers) e \textit{pool} reativo de eventos via Netty, maximizando a eficiência de transmissão. Por sua vez, o Java RMI utiliza o protocolo proprietário JRMP sobre TCP com gestão de \textit{threads} pela própria JVM, mas introduz maior sobrecarga de dados decorrente da serialização de metadados e assinaturas das classes Java.
+
+% -------------------------------------------------------------------------
+\subsection{Facilidade de Uso e Complexidade de Manutenção}
+
+\begin{itemize}
+    \item \textbf{Sockets:} Inicialização simples para pequenos protótipos, porém apresenta custo de manutenção exponencial. Qualquer acréscimo funcional (como uma nova operação de potenciação) demanda alterações simultâneas no \textit{parser} do servidor, validação sintática do cliente e na documentação informal do protocolo textual.
+    \item \textbf{gRPC:} Exige esforço inicial considerável para aprendizado da sintaxe proto3 e parametrização dos \textit{plugins} do Maven. Em contrapartida, a manutenção a longo prazo é extremamente facilitada: adicionar uma nova função resume-se a declarar um método no arquivo \texttt{.proto} e reexecutar a compilação, cabendo ao compilador apontar inconsistências estáticas em tempo de construção.
+    \item \textbf{Java RMI:} Altamente intuitivo para engenheiros com familiaridade em Java puro, dispensando bibliotecas externas. Entretanto, sofre de acoplamento severo: alterações na interface remota exigem que clientes e servidores sincronizem seus arquivos \texttt{.class} e garantam a paridade de versões por meio do \texttt{serialVersionUID}.
+\end{itemize}
+
+% -------------------------------------------------------------------------
+\subsection{Quadro Comparativo Síntese}
+
+A Tabela~\ref{tab:comparativo} consolida os parâmetros técnicos e arquiteturais observados durante a execução do projeto prático.
+
+\begin{table}[H]
+    \centering
+    \caption{Quadro comparativo entre Sockets TCP, gRPC e Java RMI.}
+    \label{tab:comparativo}
+    \small
+    \renewcommand{\arraystretch}{1.45}
+    \begin{tabularx}{\textwidth}{|
+        >{\columncolor{gray!8}\raggedright\arraybackslash\hyphenpenalty=10000}p{3.5cm}|
+        >{\raggedright\arraybackslash\hyphenpenalty=10000}X|
+        >{\raggedright\arraybackslash\hyphenpenalty=10000}X|
+        >{\raggedright\arraybackslash\hyphenpenalty=10000}X|
+    }
+        \hline
+        \rowcolor{gray!20}
+        \textbf{Critério de Análise} & \textbf{Sockets TCP} & \textbf{gRPC (RPC)} & \textbf{Java RMI} \\ \hline
+        \textbf{Camada de Transporte} & TCP Puro & HTTP/2 sobre TCP & JRMP sobre TCP \\ \hline
+        \textbf{Formato de Codificação} & Texto delimitado (\texttt{\textbackslash n}) & Binário (Protocol Buffers) & Binário (Serialização Java) \\ \hline
+        \textbf{Definição do Contrato} & Informal / Implícito & Formal (IDL proto3) & Formal (Interface Java) \\ \hline
+        \textbf{Gestão de Concorrência} & Manual (\texttt{Thread} dedicada) & Automática (\textit{Pool} Netty) & Automática (\textit{Pool} JVM) \\ \hline
+        \textbf{Verificação de Tipos} & Em execução (\textit{parsing}) & Em compilação (Forte) & Em compilação (Forte) \\ \hline
+        \textbf{Interoperabilidade} & Universal (qualquer SO) & Universal (Poliglota) & Nula (Exclusivo Java/JVM) \\ \hline
+        \textbf{Dependências Externas} & Nenhuma (JDK nativo) & Bibliotecas gRPC / Netty & Nenhuma (JDK nativo) \\ \hline
+        \textbf{Sobrecarga de Rede} & Baixa (porém textual) & Mínima (ultra-compacto) & Alta (metadados de classes) \\ \hline
+        \textbf{Nível de Abstração} & Baixo Nível & Médio-Alto Nível & Alto Nível \\ \hline
+    \end{tabularx}
+    \begin{center}
+        \footnotesize \textbf{Fonte:} Elaborado pelos autores (2026).
+    \end{center}
+\end{table}
+
+% =========================================================================
+% 5. VANTAGENS E DESVANTAGENS PERCEBIDAS
+% =========================================================================
+\section{Vantagens e Desvantagens Percebidas}
+
+A partir do desenvolvimento e da execução dos experimentos, identificaram-se os pontos fortes e as limitações de cada tecnologia.
+
+\subsection{Sockets TCP}
+\begin{itemize}[label=\textcolor{green!60!black}{\textbf{+}}]
+    \item \textbf{Controle Total:} Permite controle cirúrgico sobre a camada de transporte, tamanho de \textit{buffers}, portas de rede e políticas de \textit{timeout}.
+    \item \textbf{Leveza:} Ausência total de arcabouços terceiros, dependendo unicamente da API de rede básica do sistema.
+\end{itemize}
+\begin{itemize}[label=\textcolor{red!80!black}{\textbf{--}}]
+    \item \textbf{Código Repetitivo (\textit{Boilerplate}):} Necessidade constante de codificar leitores, empacotadores e delimitadores manuais de linha.
+    \item \textbf{Vulnerabilidade a Falhas Sintáticas:} Erros de pontuação ou espaços duplos nas requisições podem provocar falhas imprevisíveis se o tratamento de exceção for insuficiente.
+\end{itemize}
+
+\subsection{gRPC (RPC)}
+\begin{itemize}[label=\textcolor{green!60!black}{\textbf{+}}]
+    \item \textbf{Desempenho e Eficiência:} A multiplexação do HTTP/2 aliada à codificação binária do Protocol Buffers proporciona a menor latência e consumo de banda entre as três opções.
+    \item \textbf{Ecossistema Poliglota:} Permite que clientes implementados em Python, C++, Go ou Node.js comuniquem-se nativamente com o servidor Java sem nenhuma camada de conversão adicional.
+    \item \textbf{Geração de Código Estável:} Minimiza erros humanos na definição de mensagens de transporte.
+\end{itemize}
+\begin{itemize}[label=\textcolor{red!80!black}{\textbf{--}}]
+    \item \textbf{Curva de Entrada e Dependências:} Requer instalação e parametrização de compiladores de protocolo (\texttt{protoc}) e plugins Maven externos.
+    \item \textbf{Depuração Opaca:} Diferente do texto cru transmitido em sockets, a inspeção de pacotes em trânsito (por exemplo, via Wireshark) requer chaves de decodificação e arquivos proto para leitura dos dados binários.
+\end{itemize}
+
+\subsection{Java RMI}
+\begin{itemize}[label=\textcolor{green!60!black}{\textbf{+}}]
+    \item \textbf{Integração Orientada a Objetos:} A fluidez de desenvolvimento é máxima para programadores Java, permitindo passar objetos complexos por parâmetro com suporte a polimorfismo.
+    \item \textbf{Nativo no JDK:} Não requer inclusão de dependências externas ou plugins de compilação adicionais.
+\end{itemize}
+\begin{itemize}[label=\textcolor{red!80!black}{\textbf{--}}]
+    \item \textbf{Confinamento de Plataforma:} Incapacidade total de interagir com tecnologias fora do ambiente da Máquina Virtual Java.
+    \item \textbf{Sobrecarga de Serialização e Segurança:} A serialização padrão do Java é pesada e historicamente suscetível a vulnerabilidades de injeção de classes quando exposta a redes abertas.
+\end{itemize}
+
+% =========================================================================
+% 6. DIFICULDADES ENCONTRADAS E SOLUÇÕES ADOTADAS
+% =========================================================================
+\section{Dificuldades Encontradas e Soluções Adotadas}
+
+Durante o ciclo de desenvolvimento das três soluções, os seguintes desafios técnicos foram superados:
+
+\begin{enumerate}
+    \item \textbf{Robustez do Parsing Textual nos Sockets:}
+    No modelo inicial em Sockets, entradas com múltiplos espaços consecutivos ou caracteres inválidos causavam quebras no método \texttt{split()}. A solução consistiu em empregar a expressão regular \texttt{"\textbackslash\textbackslash s+"} e encapsular as conversões numéricas dentro de blocos de captura \texttt{try-catch} específicos para \texttt{NumberFormatException}, assegurando que o servidor responda com \texttt{ERRO: ...} sem interromper a sessão do cliente.
+
+    \item \textbf{Integração do Plugin Protobuf no Maven (gRPC):}
+    A compilação do gRPC depende de binários nativos do \texttt{protoc} adequados à plataforma do sistema operacional hospedeiro. Para evitar incompatibilidades entre sistemas operacionais dos integrantes da dupla, usou-se o \texttt{os-maven-plugin} acoplado ao \texttt{protobuf-maven-plugin} na raiz do módulo RPC, permitindo a detecção dinâmica de arquiteturas Linux x86\_64 e Windows.
+
+    \item \textbf{Padronização Multi-Módulo com Perfis Maven:}
+    Para viabilizar uma experiência de compilação integrada e execução uniforme sem necessidade de comandos extensos no terminal, construiu-se uma estrutura de projeto multi-módulo com um arquivo \texttt{pom.xml} agregador na raiz e perfis padronizados (\texttt{-Pservidor} e \texttt{-Pcliente}) em cada subdiretório.
+\end{enumerate}
+
+% =========================================================================
+% 7. CASOS DE USO PRÁTICOS NA INDÚSTRIA
+% =========================================================================
+\section{Casos de Uso Práticos na Indústria}
+
+A seleção do mecanismo de comunicação em projetos reais da engenharia de software é guiada por requisitos funcionais e não-funcionais:
+
+\begin{itemize}
+    \item \textbf{Indicações para Sockets TCP:}
+    Recomendado para sistemas que exigem latência crítica e controle direto do canal de comunicação, tais como servidores de \textbf{jogos eletrônicos multijogador em tempo real}, gateways de sensores para Internet das Coisas (IoT) industrial, sistemas embarcados e servidores de mensageria proprietários.
+    
+    \item \textbf{Indicações para gRPC (RPC):}
+    Consolidou-se como o padrão de fato para a comunicação interna em \textbf{arquiteturas de microsserviços em nuvem de alta escala} (adotado por empresas como Google, Netflix, Uber e Spotify). É a escolha ideal quando sistemas heterogêneos escritos em diferentes linguagens precisam interoperar com alto rendimento, transmissão contínua de dados (\textit{streaming}) e contratos rígidos.
+
+    \item \textbf{Indicações para Java RMI:}
+    Apropriado fundamentalmente para a manutenção e evolução de \textbf{sistemas corporativos legados em Java} (como barramentos baseados em Java EE e Enterprise JavaBeans -- EJB), bem como sistemas distribuídos acadêmicos ou corporativos fechados, onde há certeza absoluta de que todos os nós participantes são integralmente baseados na JVM.
+\end{itemize}
+
+% =========================================================================
+% 8. GUIA DE EXECUÇÃO E REPRODUTIBILIDADE DOS TESTES
+% =========================================================================
+% \section{Guia de Execução e Testes}
+
+% Para reproduzir os testes e validar o comportamento idêntico das três implementações da calculadora, deve-se proceder conforme as instruções a seguir a partir de um terminal com suporte ao Apache Maven e JDK 17+:
+
+% \subsection{Compilação Geral}
+% Na raiz do repositório clonado:
+% \begin{lstlisting}[language=bash, numbers=none]
+% mvn clean compile
+% \end{lstlisting}
+
+% \subsection{Execução das Aplicações}
+% Para cada tecnologia, devem-se abrir dois terminais distintos (um para o Servidor e outro para o Cliente):
+
+% \begin{itemize}
+%     \item \textbf{Versão 1: Sockets TCP}
+%     \begin{itemize}
+%         \item Terminal 1 (Servidor): \texttt{mvn exec:java -pl Socket -Pservidor}
+%         \item Terminal 2 (Cliente): \texttt{mvn exec:java -pl Socket -Pcliente}
+%     \end{itemize}
+
+%     \item \textbf{Versão 2: gRPC (RPC)}
+%     \begin{itemize}
+%         \item Terminal 1 (Servidor): \texttt{mvn exec:java -pl RPC -Pservidor}
+%         \item Terminal 2 (Cliente): \texttt{mvn exec:java -pl RPC -Pcliente}
+%     \end{itemize}
+
+%     \item \textbf{Versão 3: Java RMI}
+%     \begin{itemize}
+%         \item Terminal 1 (Servidor): \texttt{mvn exec:java -pl RMI -Pservidor}
+%         \item Terminal 2 (Cliente): \texttt{mvn exec:java -pl RMI -Pcliente}
+%     \end{itemize}
+% \end{itemize}
+
+% =========================================================================
+% 9. CONCLUSÃO
+% =========================================================================
+\section{Conclusão}
+
+O desenvolvimento prático das três versões da Calculadora Distribuída permitiu vivenciar de forma empírica o dilema fundamental da engenharia de software distribuída: o compromisso entre nível de abstração, portabilidade, controle de baixo nível e facilidade de manutenção.
+
+A implementação via \textbf{Sockets} evidenciou a complexidade inerente ao gerenciamento manual de canais de transmissão de baixo nível, ressaltando o esforço necessário para projetar protocolos de aplicação que sejam tolerantes a formatações imprevistas e divisão de fluxo concorrente. 
+
+A abordagem via \textbf{Java RMI} demonstrou a elegância da transparência de localização em um ambiente puramente orientado a objetos, simplificando as chamadas remotas à sintaxe convencional de métodos, mas evidenciando a fragilidade decorrente do acoplamento tecnológico exclusivo à plataforma Java e da sobrecarga de serialização.
+
+Por fim, o \textbf{gRPC} destacou-se como o paradigma mais alinhado aos padrões industriais contemporâneos. Ao unir um contrato formal agnóstico a linguagem (Protocol Buffers) com o desempenho e a multiplexação do HTTP/2, ele soluciona tanto a ausência de tipagem dos sockets quanto o isolamento tecnológico do RMI, revelando-se a solução mais equilibrada para cenários de computação distribuída moderna.
+
+% =========================================================================
+% ELEMENTOS PÓS-TEXTUAIS: REFERÊNCIAS BIBLIOGRÁFICAS
+% =========================================================================
+\newpage
+\begin{thebibliography}{99}
+    \bibitem{coulouris}
+    COULOURIS, George; DOLLIMORE, Jean; KINDBERG, Tim; BLAIR, Gordon. \textbf{Sistemas Distribuídos: Conceitos e Projeto}. 5. ed. Porto Alegre: Bookman, 2013.
+
+    \bibitem{tanenbaum}
+    TANENBAUM, Andrew S.; STEEN, Maarten van. \textbf{Sistemas Distribuídos: Princípios e Paradigmas}. 2. ed. São Paulo: Pearson Prentice Hall, 2007.
+
+    \bibitem{oracle_rmi}
+    ORACLE. \textbf{Java Remote Method Invocation (RMI) Specification}. Java Platform, Standard Edition Documentation. Disponível em: \url{https://docs.oracle.com/javase/8/docs/platform/rmi/spec/rmiTOC.html}. Acesso em: 24 set. 2026.
+
+\end{thebibliography}
+
+\end{document}
