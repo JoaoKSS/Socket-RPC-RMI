@@ -211,11 +211,11 @@ O cliente opera via console em laço contínuo através da sintaxe \texttt{<OPER
         },
         arrow/.style={-{Stealth[length=2.5mm]}, thick}
     ]
-        \node[box] (cli) {\textbf{Cliente Distribuído}\\(Console Interativo)};
-        \node[box, right=of cli] (srv) {\textbf{Servidor de Cálculo}\\(Execução Matemática)};
+        \node[box] (cli) {\textbf{Cliente}\\(Console no terminal)};
+        \node[box, right=of cli] (srv) {\textbf{Servidor}\\(Execução)};
 
-        \draw[arrow] ([yshift=0.3cm]cli.east) -- node[midway, above=2pt, font=\footnotesize] {Requisição: Operação e Parâmetros} ([yshift=0.3cm]srv.west);
-        \draw[arrow] ([yshift=-0.3cm]srv.west) -- node[midway, below=2pt, font=\footnotesize] {Resposta: Valor Calculado ou Erro} ([yshift=-0.3cm]cli.east);
+        \draw[arrow] ([yshift=0.3cm]cli.east) -- node[midway, above=2pt, font=\footnotesize] {Operação e Parâmetros} ([yshift=0.3cm]srv.west);
+        \draw[arrow] ([yshift=-0.3cm]srv.west) -- node[midway, below=2pt, font=\footnotesize] {Valor Calculado ou Erro} ([yshift=-0.3cm]cli.east);
     \end{tikzpicture}
     \caption{Fluxo de comunicação cliente-servidor da Calculadora Distribuída.}
     \label{fig:fluxo_geral}
@@ -407,12 +407,12 @@ A partir do desenvolvimento e da execução dos experimentos, identificaram-se o
 
 \subsection{Sockets TCP}
 \begin{itemize}[label=\textcolor{green!60!black}{\textbf{+}}]
-    \item \textbf{Controle Total:} Permite controle cirúrgico sobre a camada de transporte, tamanho de \textit{buffers}, portas de rede e políticas de \textit{timeout}.
-    \item \textbf{Leveza:} Ausência total de arcabouços terceiros, dependendo unicamente da API de rede básica do sistema.
+    \item \textbf{Controle Total e Leveza:} Não depende de bibliotecas externas. O desenvolvedor tem controle direto de tudo o que envia, podendo criar mensagens simples sob medida (ex.: o texto enxuto \texttt{"SOMA 10 20\textbackslash n"}).
+    \item \textbf{Interoperabilidade Universal:} Como a comunicação trafega apenas bytes pela rede, qualquer linguagem consegue se comunicar facilmente (ex.: um cliente simples em Python ou C conecta diretamente no servidor Java).
 \end{itemize}
 \begin{itemize}[label=\textcolor{red!80!black}{\textbf{--}}]
-    \item \textbf{Código Repetitivo (\textit{Boilerplate}):} Necessidade constante de codificar leitores, empacotadores e delimitadores manuais de linha.
-    \item \textbf{Vulnerabilidade a Falhas Sintáticas:} Erros de pontuação ou espaços duplos nas requisições podem provocar falhas imprevisíveis se o tratamento de exceção for insuficiente.
+    \item \textbf{Muito Código Repetitivo:} É preciso programar tudo manualmente, desde gerenciar conexões e \textit{threads} até controlar leituras com \texttt{BufferedReader}, envios com \texttt{PrintWriter} e quebras de linha com \texttt{\textbackslash n}.
+    \item \textbf{Facilidade para Erros de Formatação:} Não há checagem automática dos dados. Se o cliente enviar uma mensagem inesperada (ex.: \texttt{"SOMA 10"} faltando um número), o servidor quebra com erros de conversão caso o desenvolvedor não trate cada detalhe manualmente.
 \end{itemize}
 
 \subsection{gRPC (RPC)}
@@ -445,7 +445,7 @@ Durante o ciclo de desenvolvimento das três soluções, os seguintes desafios t
 
 \begin{enumerate}
     \item \textbf{Robustez do Parsing Textual nos Sockets:}
-    No modelo inicial em Sockets, entradas com múltiplos espaços consecutivos ou caracteres inválidos causavam quebras no método \texttt{split()}. A solução consistiu em empregar a expressão regular \texttt{"\textbackslash\textbackslash s+"} e encapsular as conversões numéricas dentro de blocos de captura \texttt{try-catch} específicos para \texttt{NumberFormatException}, assegurando que o servidor responda com \texttt{ERRO: ...} sem interromper a sessão do cliente.
+    No modelo inicial em Sockets, entradas com múltiplos espaços consecutivos causavam quebras no método \texttt{split()}. A solução consistiu em empregar a expressão regular \texttt{"\textbackslash\textbackslash s+"}.
 
     \item \textbf{Integração do Plugin Protobuf no Maven (gRPC):}
     A compilação do gRPC depende de binários nativos do \texttt{protoc} adequados à plataforma do sistema operacional hospedeiro. Para evitar incompatibilidades entre sistemas operacionais dos integrantes da dupla, usou-se o \texttt{os-maven-plugin} acoplado ao \texttt{protobuf-maven-plugin} na raiz do módulo RPC, permitindo a detecção dinâmica de arquiteturas Linux x86\_64 e Windows.
@@ -463,7 +463,7 @@ A seleção do mecanismo de comunicação em projetos reais da engenharia de sof
 
 \begin{itemize}
     \item \textbf{Indicações para Sockets TCP:}
-    Recomendado para sistemas que exigem latência crítica e controle direto do canal de comunicação, tais como servidores de \textbf{jogos eletrônicos multijogador em tempo real}, gateways de sensores para Internet das Coisas (IoT) industrial, sistemas embarcados e servidores de mensageria proprietários.
+    Recomendado para sistemas que exigem latência crítica e controle direto do canal de comunicação, tais como servidores de \textbf{jogos eletrônicos multijogador em tempo real}, gateways de sensores para Internet das Coisas (IoT) industrial, e sistemas embarcados.
     
     \item \textbf{Indicações para gRPC (RPC):}
     Consolidou-se como o padrão de fato para a comunicação interna em \textbf{arquiteturas de microsserviços em nuvem de alta escala} (adotado por empresas como Google, Netflix, Uber e Spotify). É a escolha ideal quando sistemas heterogêneos escritos em diferentes linguagens precisam interoperar com alto rendimento, transmissão contínua de dados (\textit{streaming}) e contratos rígidos.
@@ -513,13 +513,13 @@ A seleção do mecanismo de comunicação em projetos reais da engenharia de sof
 % =========================================================================
 \section{Conclusão}
 
-O desenvolvimento prático das três versões da Calculadora Distribuída permitiu vivenciar de forma empírica o dilema fundamental da engenharia de software distribuída: o compromisso entre nível de abstração, portabilidade, controle de baixo nível e facilidade de manutenção.
+O desenvolvimento prático das três versões da Calculadora Distribuída mostrou claramente a relação de equilíbrio em sistemas distribuídos: quanto maior o controle em baixo nível, maior o trabalho manual de manutenção; e quanto maior a abstração, mais simples e produtivo se torna o código.
 
-A implementação via \textbf{Sockets} evidenciou a complexidade inerente ao gerenciamento manual de canais de transmissão de baixo nível, ressaltando o esforço necessário para projetar protocolos de aplicação que sejam tolerantes a formatações imprevistas e divisão de fluxo concorrente. 
+A versão com \textbf{Sockets} deixou clara a dificuldade de cuidar de tudo manualmente. Embora ofereça controle total da rede sem depender de bibliotecas extras, exige muito código repetitivo para gerenciar conexões, criar \textit{threads} e tratar mensagens de texto, sendo muito fácil quebrar com entradas mal formatadas.
 
-A abordagem via \textbf{Java RMI} demonstrou a elegância da transparência de localização em um ambiente puramente orientado a objetos, simplificando as chamadas remotas à sintaxe convencional de métodos, mas evidenciando a fragilidade decorrente do acoplamento tecnológico exclusivo à plataforma Java e da sobrecarga de serialização.
+O \textbf{Java RMI} mostrou como a orientação a objetos facilita a comunicação distribuída, permitindo chamar métodos remotos como se fossem locais. Por outro lado, revelou duas limitações importantes: funciona exclusivamente dentro do ecossistema Java e carrega o peso da serialização nativa da linguagem.
 
-Por fim, o \textbf{gRPC} destacou-se como o paradigma mais alinhado aos padrões industriais contemporâneos. Ao unir um contrato formal agnóstico a linguagem (Protocol Buffers) com o desempenho e a multiplexação do HTTP/2, ele soluciona tanto a ausência de tipagem dos sockets quanto o isolamento tecnológico do RMI, revelando-se a solução mais equilibrada para cenários de computação distribuída moderna.
+Por fim, o \textbf{gRPC} provou ser a opção mais equilibrada e alinhada ao mercado atual. Ao combinar um contrato bem definido e compatível com várias linguagens (Protocol Buffers) com a alta velocidade do HTTP/2, ele resolve a falta de tipagem dos sockets e supera o isolamento tecnológico do RMI, destacando-se como a melhor escolha para sistemas distribuídos modernos.
 
 % =========================================================================
 % ELEMENTOS PÓS-TEXTUAIS: REFERÊNCIAS BIBLIOGRÁFICAS
