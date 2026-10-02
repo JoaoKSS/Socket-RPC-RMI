@@ -281,7 +281,7 @@ O compilador \texttt{protobuf-maven-plugin} gera as classes de dados tipadas e o
 % -------------------------------------------------------------------------
 \subsection{Java RMI}
 
-O Java RMI provê computação distribuída baseada em objetos nativos da JVM sobre o protocolo JRMP. A especificação utiliza a interface remota \texttt{CalculadoraRmi} (que estende \texttt{Remote} e declara \texttt{RemoteException}) e a classe concreta \texttt{CalculadoraRmiImpl} (que herda de \texttt{UnicastRemoteObject}).
+O Java RMI provê computação distribuída baseada em objetos nativos da JVM sobre o protocolo JRMP (Java Remote Method Protocol). A especificação utiliza a interface remota \texttt{CalculadoraRmi} (que estende \texttt{Remote} e declara \texttt{RemoteException}) e a classe concreta \texttt{CalculadoraRmiImpl} (que herda de \texttt{UnicastRemoteObject}).
 
 O nó servidor publica a instância remota no \textbf{RMI Registry} (porta 1099) sob o identificador \texttt{"CalculadoraService"} através do método \texttt{rebind()}. O cliente obtém a referência remota via \texttt{lookup()} e invoca os métodos diretamente sobre o \textit{stub} local com transparência sintática, conforme a Figura~\ref{fig:seq_rmi}.
 
