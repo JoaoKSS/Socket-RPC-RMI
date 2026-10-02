@@ -245,7 +245,7 @@ Por se tratar de um canal de fluxo de bytes não estruturado, definiu-se um prot
 % -------------------------------------------------------------------------
 \subsection{RPC com gRPC}
 
-A versão RPC utiliza o arcabouço gRPC sobre HTTP/2 com serialização binária compacta em Protocol Buffers (proto3). O contrato das operações e mensagens foi formalizado no arquivo \texttt{calculadora.proto} (Listagem~\ref{lst:proto}).
+A versão RPC utiliza o \textbf{framework gRPC} sobre HTTP/2 com serialização binária compacta em Protocol Buffers (proto3). O contrato das operações e mensagens foi formalizado no arquivo \texttt{calculadora.proto} (Listagem~\ref{lst:proto}).
 
 \begin{lstlisting}[language=Java, caption={Contrato de serviço definido em Protocol Buffers (calculadora.proto).}, label={lst:proto}]
 syntax = "proto3";
@@ -383,7 +383,7 @@ A Tabela~\ref{tab:comparativo} consolida os parâmetros técnicos e arquiteturai
         \hline
         \rowcolor{gray!20}
         \textbf{Critério de Análise} & \textbf{Sockets TCP} & \textbf{gRPC (RPC)} & \textbf{Java RMI} \\ \hline
-        \textbf{Camada de Transporte} & TCP Puro & HTTP/2 sobre TCP & JRMP sobre TCP \\ \hline
+        \textbf{Camada de Transporte} & TCP Puro & HTTP/2 & JRMP \\ \hline
         \textbf{Formato de Codificação} & Texto delimitado (\texttt{\textbackslash n}) & Binário (Protocol Buffers) & Binário (Serialização Java) \\ \hline
         \textbf{Definição do Contrato} & Informal / Implícito & Formal (IDL proto3) & Formal (Interface Java) \\ \hline
         \textbf{Gestão de Concorrência} & Manual (\texttt{Thread} dedicada) & Automática (\textit{Pool} Netty) & Automática (\textit{Pool} JVM) \\ \hline
@@ -423,7 +423,7 @@ A partir do desenvolvimento e da execução dos experimentos, identificaram-se o
 \end{itemize}
 \begin{itemize}[label=\textcolor{red!80!black}{\textbf{--}}]
     \item \textbf{Curva de Entrada e Dependências:} Requer instalação e parametrização de compiladores de protocolo (\texttt{protoc}) e plugins Maven externos.
-    \item \textbf{Depuração Opaca:} Diferente do texto cru transmitido em sockets, a inspeção de pacotes em trânsito (por exemplo, via Wireshark) requer chaves de decodificação e arquivos proto para leitura dos dados binários.
+    \item \textbf{Depuração Opaca:} Diferente do texto cru transmitido em sockets, a inspeção de pacotes em trânsito requer chaves de decodificação e arquivos proto para leitura dos dados binários.
 \end{itemize}
 
 \subsection{Java RMI}
@@ -447,8 +447,8 @@ Durante o ciclo de desenvolvimento das três soluções, os seguintes desafios t
     \item \textbf{Robustez do Parsing Textual nos Sockets:}
     No modelo inicial em Sockets, entradas com múltiplos espaços consecutivos causavam quebras no método \texttt{split()}. A solução consistiu em empregar a expressão regular \texttt{"\textbackslash\textbackslash s+"}.
 
-    \item \textbf{Integração do Plugin Protobuf no Maven (gRPC):}
-    A compilação do gRPC depende de binários nativos do \texttt{protoc} adequados à plataforma do sistema operacional hospedeiro. Para evitar incompatibilidades entre sistemas operacionais dos integrantes da dupla, usou-se o \texttt{os-maven-plugin} acoplado ao \texttt{protobuf-maven-plugin} na raiz do módulo RPC, permitindo a detecção dinâmica de arquiteturas Linux x86\_64 e Windows.
+    \item \textbf{Curva de Aprendizado e Funcionamento do gRPC:}
+    O gRPC impõe uma mudança de mentalidade em relação a chamadas Java comuns e sockets simples. A principal dificuldade foi compreender o modelo assíncrono com \texttt{StreamObserver}, no qual os métodos não utilizam \texttt{return} convencional e esquecer de invocar \texttt{onCompleted()} deixava o cliente travado aguardando resposta. A solução consistiu em assimilar o ciclo de vida do framework e adotar o \texttt{BlockingStub} no cliente, tornando a comunicação síncrona e previsível no terminal.
 
     \item \textbf{Padronização Multi-Módulo com Perfis Maven:}
     Para viabilizar uma experiência de compilação integrada e execução uniforme sem necessidade de comandos extensos no terminal, construiu-se uma estrutura de projeto multi-módulo com um arquivo \texttt{pom.xml} agregador na raiz e perfis padronizados (\texttt{-Pservidor} e \texttt{-Pcliente}) em cada subdiretório.
@@ -517,9 +517,10 @@ O desenvolvimento prático das três versões da Calculadora Distribuída mostro
 
 A versão com \textbf{Sockets} deixou clara a dificuldade de cuidar de tudo manualmente. Embora ofereça controle total da rede sem depender de bibliotecas extras, exige muito código repetitivo para gerenciar conexões, criar \textit{threads} e tratar mensagens de texto, sendo muito fácil quebrar com entradas mal formatadas.
 
-O \textbf{Java RMI} mostrou como a orientação a objetos facilita a comunicação distribuída, permitindo chamar métodos remotos como se fossem locais. Por outro lado, revelou duas limitações importantes: funciona exclusivamente dentro do ecossistema Java e carrega o peso da serialização nativa da linguagem.
+O \textbf{gRPC} provou ser a opção mais equilibrada e alinhada ao mercado atual. Ao combinar um contrato bem definido e compatível com várias linguagens (Protocol Buffers) com a alta velocidade do HTTP/2, ele resolve a falta de tipagem dos sockets e supera o isolamento tecnológico do RMI, destacando-se como a melhor escolha para sistemas distribuídos modernos.
 
-Por fim, o \textbf{gRPC} provou ser a opção mais equilibrada e alinhada ao mercado atual. Ao combinar um contrato bem definido e compatível com várias linguagens (Protocol Buffers) com a alta velocidade do HTTP/2, ele resolve a falta de tipagem dos sockets e supera o isolamento tecnológico do RMI, destacando-se como a melhor escolha para sistemas distribuídos modernos.
+Por fim, o \textbf{Java RMI} mostrou como a orientação a objetos facilita a comunicação distribuída, permitindo chamar métodos remotos como se fossem locais. Por outro lado, revelou duas limitações importantes: funciona exclusivamente dentro do ecossistema Java e carrega o peso da serialização nativa da linguagem.
+
 
 % =========================================================================
 % ELEMENTOS PÓS-TEXTUAIS: REFERÊNCIAS BIBLIOGRÁFICAS

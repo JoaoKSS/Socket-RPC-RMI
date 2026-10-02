@@ -287,9 +287,9 @@ graph LR
 1. **Protocolo e Parsing no Socket**:
    - Garantir que espaços múltiplos, quebras de linha e entradas com caracteres especiais não quebrassem a leitura do servidor.
    - Tratar a divisão por zero e formatações incorretas enviando respostas de erro claras (`ERRO: ...`) sem derrubar a conexão da sessão.
-2. **Ambiente e Plugins do gRPC**:
-   - Configuração do plugin `protobuf-maven-plugin` no `pom.xml`, que depende de artefatos nativos do `protoc` de acordo com a arquitetura do sistema operacional (`os-maven-plugin` para Linux x86_64).
-   - Reconhecimento das pastas de código-fonte gerado (`target/generated-sources/protobuf/...`) no Java Language Server do VS Code.
+2. **Curva de Aprendizado e Funcionamento do gRPC**:
+   - Compreensão do modelo assíncrono e orientado a eventos via `StreamObserver`, onde métodos no servidor não utilizam `return` convencional e a omissão de `onCompleted()` deixa o cliente travado indefinidamente.
+   - Adaptação ao uso do `BlockingStub` no cliente para manter a sincronização simples e compatível com a interface de console.
 3. **Gerenciamento do RMI Registry e Rede**:
    - Criação programática do registro RMI na porta `1099` através do `LocateRegistry.createRegistry()` evitando falhas caso uma instância do registro já estivesse em execução no host.
    - Configuração da propriedade `java.rmi.server.hostname` para viabilizar conexões entre máquinas distintas em redes locais com múltiplos adaptadores de rede.
