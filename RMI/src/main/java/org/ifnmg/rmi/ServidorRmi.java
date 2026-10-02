@@ -16,7 +16,6 @@ public class ServidorRmi {
     public static void main(String[] args) {
         int porta = args.length > 0 ? Integer.parseInt(args[0]) : PORTA_PADRAO;
 
-        // Se fornecido um IP ou hostname de rede como segundo argumento, configura para permitir conexões remotas
         if (args.length > 1) {
             System.setProperty("java.rmi.server.hostname", args[1]);
         }
@@ -28,7 +27,6 @@ public class ServidorRmi {
                 registry = LocateRegistry.createRegistry(porta);
                 System.out.println("RMI Registry criado com sucesso na porta " + porta + ".");
             } catch (Exception e) {
-                // Caso o registro ja tenha sido criado anteriormente
                 registry = LocateRegistry.getRegistry(porta);
                 System.out.println("RMI Registry existente obtido na porta " + porta + ".");
             }
